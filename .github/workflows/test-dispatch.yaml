@@ -1,0 +1,61 @@
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log Level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: false
+      boolean_default_true:
+        description: 'Test scenario tags'
+        required: true
+        type: boolean
+        default: true
+      boolean_default_false:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+        default: false
+      number1_default:
+        description: 'Number w. default'
+        default: '100'
+        type: number
+      number2:
+        description: 'Number w/o. default'
+        type: number
+      string1_default:
+        description: 'String w. default'
+        default: 'Hello world'
+        type: string
+      string2:
+        description: 'String w/o. default'
+        required: true
+        type: string
+
+jobs:
+  log-the-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Log level: $LEVEL"
+          echo "Tags: $TAGS"
+          echo "Environment: $ENVIRONMENT"
+        env:
+          LEVEL: ${{ inputs.logLevel }}
+          TAGS: ${{ inputs.tags }}
+          ENVIRONMENT: ${{ inputs.environment }}
+      - env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
